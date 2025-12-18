@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
@@ -6,10 +7,24 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private PoolManager poolManager;
 
-   private void Awake()
+    private bool isDead = false;
+
+    private void Awake()
     {
         poolManager = FindFirstObjectByType<PoolManager>();
     }
+
+    void OnEnable()
+    {
+        isDead = false;
+        hp = 100f; // 체력 초기화
+    }
+
+    void OnDisable()
+    {
+        // 필요시 초기화 작업
+    }
+
     // 인터페이스 구현
     public void TakeDamage(float damage, float knockbackForce, Vector3 knockbackDir)
     {
@@ -26,8 +41,9 @@ public class Enemy : MonoBehaviour, IDamageable
 
     void Die()
     {
+        if (isDead) return;
+        isDead = true;
         // 경험치(칩) 드랍 로직 추가 예정
         poolManager.ReleaseObject("Enemy", gameObject);
-        hp = 100f; // 체력 초기화
     }
 }
