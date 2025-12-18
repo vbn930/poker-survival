@@ -10,6 +10,12 @@ public class EnemySpawner : MonoBehaviour
 
     private float timer;
     private Transform playerTransform;
+    private PoolManager poolManager;
+
+    private void Awake()
+    {
+        poolManager = FindFirstObjectByType<PoolManager>();
+    }
 
     void Start()
     {
@@ -42,6 +48,7 @@ public class EnemySpawner : MonoBehaviour
         // 2. 플레이어 위치를 기준으로 더함
         Vector3 spawnPos = playerTransform.position + new Vector3(randomPoint.x, randomPoint.y, 0);
 
-        Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+        GameObject enemyObj = poolManager.GetObject("Enemy");
+        enemyObj.transform.position = spawnPos;
     }
 }

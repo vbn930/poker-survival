@@ -4,6 +4,12 @@ public class Enemy : MonoBehaviour, IDamageable
 {
     public float hp = 100f;
 
+    private PoolManager poolManager;
+
+   private void Awake()
+    {
+        poolManager = FindFirstObjectByType<PoolManager>();
+    }
     // 인터페이스 구현
     public void TakeDamage(float damage, float knockbackForce, Vector3 knockbackDir)
     {
@@ -21,6 +27,7 @@ public class Enemy : MonoBehaviour, IDamageable
     void Die()
     {
         // 경험치(칩) 드랍 로직 추가 예정
-        Destroy(gameObject);
+        poolManager.ReleaseObject("Enemy", gameObject);
+        hp = 100f; // 체력 초기화
     }
 }
